@@ -1,0 +1,25 @@
+<?php 
+if(!defined('ABSPATH'))
+	define('ABSPATH', dirname(dirname(dirname(__FILE__))));
+require ABSPATH.'/setting.php';
+header("Content-type:application/json; charset=UTF-8");
+
+global $mydb;
+
+$data=null;
+$errorsinfo=null;
+$usergroups=$mydb->get_all_usergroups();
+
+//加入成员
+if($_POST['mode']==3){
+	$isadd_id=$mydb->add_id($_POST['user_name'],$user_gname);
+	$errorsinfo=$mydb->__get('last_errors');
+	if($isadd_id)
+		$data['user_id']=$mydb->get_user_id($_POST['user_name']);
+		$data['user_gid']=$mydb->get_user_gid($user_gname);
+}
+
+$jsonpre=array('data'=>$data,'errorsinfo'=>$errorsinfo);
+$json=json_encode($jsonpre);
+echo $json;
+?>
